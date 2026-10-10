@@ -1,0 +1,20 @@
+pandas>=2.2,<3.0
+numpy>=2.0,<3.0
+requests>=2.32,<3.0
+pyarrow>=17,<24
+dask[dataframe,distributed]>=2025.5,<2027
+prefect>=3.4,<4
+sqlalchemy>=2.0.54,<3
+psycopg[binary]>=3.2,<4
+python-dotenv>=1.0,<2
+psutil>=6,<8
+jupyterlab>=4,<5
+ipykernel>=6,<8
+matplotlib>=3.9,<4
+duckdb>=1.4,<2
+tqdm>=4.66,<5
+
+# Alertas post-Gold reutiliza DuckDB, PyArrow, Prefect, SQLAlchemy 2.x y psycopg.
+
+# Dashboard local del cluster D2.
+bokeh>=3.1,<4
