@@ -1,0 +1,42 @@
+name: secop-grafana
+services:
+  postgres:
+    image: postgres:16
+    profiles: [isolated]
+    environment:
+      POSTGRES_DB: secop_dashboard
+      POSTGRES_USER: secop_admin
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-}
+      GRAFANA_DB_PASSWORD: ${GRAFANA_DB_PASSWORD:-}
+    ports:
+      - "127.0.0.1:${PG_PORT:-5434}:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./postgres/init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U secop_admin -d secop_dashboard"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+  grafana:
+    image: grafana/grafana:12.2.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Configure GRAFANA_ADMIN_PASSWORD}
+      GRAFANA_DB_PASSWORD: ${GRAFANA_DB_PASSWORD}
+      GRAFANA_DB_HOST: ${GRAFANA_DB_HOST:-host.docker.internal}
+      GRAFANA_DB_PORT: ${GRAFANA_DB_PORT:-5432}
+      GRAFANA_DB_NAME: ${GRAFANA_DB_NAME:-secop}
+      GRAFANA_DB_USER: ${GRAFANA_DB_USER:-grafana_lectura}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DATAPROXY_ROW_LIMIT: "100000"
+      GF_DATAPROXY_TIMEOUT: "45"
+    ports:
+      - "127.0.0.1:${GRAFANA_PORT:-3001}:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+volumes:
+  pg_data:
+  grafana_data:

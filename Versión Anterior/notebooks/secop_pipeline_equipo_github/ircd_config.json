@@ -1,0 +1,19 @@
+{
+  "version": "ircd-1.0",
+  "baseline_start": "2022-01-01",
+  "baseline_end": "2024-12-31",
+  "validation_year": 2025,
+  "monitoring_year": 2026,
+  "person_filter": "todos",
+  "min_entity_contracts": 30,
+  "min_reference": 30,
+  "min_value_group": 30,
+  "p90": 0.9,
+  "p95": 0.95,
+  "high_ratio": 1.5,
+  "preliminary_from": 2,
+  "priority_from": 4,
+  "max_duration_days": 1096,
+  "monthly_validated_categories": [],
+  "accept_recurrence_ties": false
+}

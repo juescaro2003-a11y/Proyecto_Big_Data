@@ -1,0 +1,1332 @@
+{
+  "uid": "secop-contratos",
+  "title": "Histórico v2 · SECOP II · Contratos y riesgo",
+  "schemaVersion": 41,
+  "version": 1,
+  "tags": [
+    "SECOP II",
+    "Contratación directa"
+  ],
+  "editable": false,
+  "timezone": "America/Bogota",
+  "refresh": "",
+  "time": {
+    "from": "2017-01-01T00:00:00Z",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "anio",
+        "label": "Año",
+        "type": "query",
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "secop-postgres"
+        },
+        "query": "SELECT 'Todos' AS __text,'Todos' AS __value UNION ALL SELECT DISTINCT anio::text,anio::text FROM secop_panel.dash_contratos_mensual UNION SELECT 'Sin fecha','0'",
+        "refresh": 1,
+        "multi": false,
+        "includeAll": false,
+        "current": {
+          "text": "Todos",
+          "value": "Todos"
+        }
+      },
+      {
+        "name": "pagina",
+        "label": "Página SQL (desde 1)",
+        "type": "textbox",
+        "query": "1",
+        "current": {
+          "text": "1",
+          "value": "1"
+        }
+      },
+      {
+        "name": "buscar",
+        "label": "Buscar ID exacto (solo detalle)",
+        "type": "textbox",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        }
+      },
+      {
+        "name": "clasificacion",
+        "label": "Clasificación (solo detalle)",
+        "type": "custom",
+        "query": "ALERTA,NO_ALERTA,NO_EVALUABLE,SIN_RESULTADO_ALERTAS",
+        "multi": true,
+        "includeAll": false,
+        "current": {
+          "text": [
+            "ALERTA",
+            "NO_ALERTA",
+            "NO_EVALUABLE",
+            "SIN_RESULTADO_ALERTAS"
+          ],
+          "value": [
+            "ALERTA",
+            "NO_ALERTA",
+            "NO_EVALUABLE",
+            "SIN_RESULTADO_ALERTAS"
+          ]
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Cómo interpretar este tablero",
+      "type": "text",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**Contratos de Gold · resultados de alertas del corte seleccionado. SIN_RESULTADO_ALERTAS indica que falta un resultado coincidente para esa fila de Gold.** ALERTA: al menos dos señales confirmadas. NO EVALUABLE: la información disponible no permite decidir. Una señal no demuestra irregularidad. **Los importes de la versión 2.0 pueden contener errores extremos; las sumas son valores reportados, no validados.** La tabla usa paginación SQL; cambia Página para recorrer todo el universo y Buscar ID para buscar un identificador exacto. Restablece Página a 1 al cambiar filtros. Clasificación y Buscar ID afectan solo al detalle; los denominadores globales conservan Año. El filtro Año controla los paneles; el selector temporal superior no se aplica. Año 0 = fecha ausente."
+      }
+    },
+    {
+      "id": 2,
+      "title": "Trazabilidad del corte contractual",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 24,
+        "h": 4
+      },
+      "description": "Fecha de cálculo y publicación son distintas. En procesos, la fuente es Gold al momento de cargar.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT * FROM secop_panel.dash_metadatos",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Contratos en ALERTA — revisar",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 24,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT coalesce(sum(n),0) AS alertas FROM secop_panel.dash_contratos_resumen WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) AND clasificacion='ALERTA'",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Clasificación y calidad monetaria",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 24,
+        "h": 6
+      },
+      "description": "El diagnóstico >10 billones no cambia señales ni excluye filas. No implementa la propuesta V2 del factor 1000.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT clasificacion,sum(n) contratos,sum(valor_reportado) cop_reportados,sum(valor_no_positivo) valores_nulos_no_finitos_o_no_positivos,sum(valores_extremos) valores_mayores_10_billones FROM secop_panel.dash_contratos_resumen WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY clasificacion",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Señales y no evaluables por dimensión",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 18,
+        "w": 24,
+        "h": 8
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT dimension,sum(n) FILTER(WHERE estado='SEÑAL') señales,sum(n) FILTER(WHERE estado='SIN_SEÑAL') sin_señal,sum(n) FILTER(WHERE estado='NO_EVALUABLE') no_evaluables,sum(n) FILTER(WHERE estado='SIN_RESULTADO_ALERTAS') sin_resultado FROM secop_panel.dash_dimensiones WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY dimension ORDER BY dimension",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Cobertura y porcentaje de señal entre evaluados",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 26,
+        "w": 24,
+        "h": 6
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT dimension,sum(n) total,sum(n) FILTER(WHERE estado IN ('SEÑAL','SIN_SEÑAL')) evaluados,round(100.0*sum(n) FILTER(WHERE estado IN ('SEÑAL','SIN_SEÑAL'))/nullif(sum(n),0),2) cobertura_pct,round(100.0*sum(n) FILTER(WHERE estado='SEÑAL')/nullif(sum(n) FILTER(WHERE estado IN ('SEÑAL','SIN_SEÑAL')),0),2) señal_entre_evaluados_pct FROM secop_panel.dash_dimensiones WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY dimension ORDER BY dimension",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Entidades — universo completo",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 24,
+        "h": 10
+      },
+      "description": "El número absoluto favorece entidades grandes. Compare también el porcentaje y la cobertura; no es un ranking de corrupción.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT entidad,sum(n) contratos,sum(alertas) alertas,sum(no_evaluables) no_evaluables,sum(sin_resultado) sin_resultado,round(100.0*sum(alertas)/nullif(sum(n),0),2) alertas_sobre_total_pct FROM secop_panel.dash_entidades WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY entidad ORDER BY alertas DESC,contratos DESC",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Contratos — página SQL de 200 filas",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 42,
+        "w": 24,
+        "h": 12
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT id_contrato,firma,entidad,proveedor,tipo,departamento,valor,clasificacion,d1,d2,d3,motivo_d1,motivo_d2,motivo_d3,participacion_proveedor,umbral_d1,zscore_robusto,umbral_d2,participacion_diciembre,umbral_d3,objeto_del_contrato,urlproceso FROM secop_panel.dash_contratos WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) AND clasificacion IN (${clasificacion:sqlstring}) AND (${buscar:sqlstring}='' OR id_contrato=${buscar:sqlstring}) ORDER BY id_contrato LIMIT 200 OFFSET (((CASE WHEN ${pagina:sqlstring} ~ '^[1-9][0-9]{0,8}$' THEN (${pagina:sqlstring})::bigint ELSE 1 END)-1)*200)",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Definición de las dimensiones",
+      "type": "text",
+      "gridPos": {
+        "x": 0,
+        "y": 54,
+        "w": 24,
+        "h": 7
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**D1 — Concentración monetaria:** participación del proveedor en el valor contratado por la entidad en la ventana de 365 días. Umbral configurado, normalmente 40 %, sujeto a cobertura y tamaño mínimo.\n\n**D2 — Valor atípico:** comparación del logaritmo del valor con mediana y MAD de contratos comparables previos; usa percentil 95 si MAD es cero. No equivale a sobreprecio probado.\n\n**D3 — Acumulación de diciembre:** proporción anual de contratos firmados en diciembre frente al historial de la entidad. Exige años completos y referencia suficiente.\n\nLos umbrales exactos y motivos se muestran en el detalle. NULL conserva el estado no evaluable. Una señal por sí sola no genera ALERTA final."
+      }
+    },
+    {
+      "id": 10,
+      "title": "Actividad mensual — firma",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 61,
+        "w": 24,
+        "h": 8
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {},
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT mes AS time,sum(n)::double precision AS registros FROM secop_panel.dash_contratos_mensual WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY mes ORDER BY mes",
+          "format": "time_series",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Tipos de contrato — todos",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 69,
+        "w": 24,
+        "h": 8
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT tipo,sum(n) registros FROM secop_panel.dash_contratos_tipos WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY tipo ORDER BY registros DESC",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Navegación SQL — cambia Página; al filtrar vuelve a 1",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 77,
+        "w": 24,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "d3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT (CASE WHEN ${pagina:sqlstring} ~ '^[1-9][0-9]{0,8}$' THEN (${pagina:sqlstring})::bigint ELSE 1 END) pagina,200 filas_por_pagina,total_filtrado,ceil(total_filtrado/200.0) paginas FROM (SELECT CASE WHEN ${buscar:sqlstring}='' THEN (SELECT coalesce(sum(n),0) FROM secop_panel.dash_contratos_resumen WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) AND clasificacion IN (${clasificacion:sqlstring})) ELSE (SELECT count(*) FROM secop_panel.dash_contratos WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) AND clasificacion IN (${clasificacion:sqlstring}) AND id_contrato=${buscar:sqlstring}) END total_filtrado) t",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "title": "Contratos y riesgo",
+      "url": "/d/secop-contratos",
+      "type": "link"
+    },
+    {
+      "title": "Procesos",
+      "url": "/d/secop-procesos",
+      "type": "link"
+    }
+  ]
+}

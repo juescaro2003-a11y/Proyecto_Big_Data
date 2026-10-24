@@ -1,0 +1,41 @@
+# Secretos locales; las plantillas SI se versionan.
+.env
+.env.*
+!.env.example
+!.env.aws.example
+!*.env.example
+*.pem
+*.key
+
+# Entornos, editores y cachés regenerables.
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+.venv/
+.vscode/
+.idea/
+.dask-spill/
+
+# Datos pesados: solo documentación/estructura dentro de data y salida.
+/data/**
+!/data/README.md
+!/data/.gitkeep
+/salida/**
+!/salida/README.md
+!/salida/.gitkeep
+
+# Bases locales, temporales y checkpoints fuera de esas carpetas.
+*.duckdb
+*.duckdb.wal
+*.db
+*.db-wal
+*.db-shm
+.pipeline.lock
+*.log
+
+# Copias históricas locales: no son dependencias operativas.
+/versiones anteriores/
+/notebooks/informes_etl/
+
+# No excluir *.json, *.sql, *.ipynb, *.yml ni requirements:
+# contienen parámetros, código, pruebas, tableros y aprovisionamiento necesarios.

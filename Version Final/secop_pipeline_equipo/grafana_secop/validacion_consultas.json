@@ -1,0 +1,278 @@
+{
+  "fixture_rows": 5,
+  "queries": [
+    {
+      "dashboard": "contratos",
+      "panel": "Trazabilidad del corte contractual",
+      "seconds": 0.0017776000313460827
+    },
+    {
+      "dashboard": "contratos",
+      "panel": "Contratos en ALERTA \u2014 revisar",
+      "seconds": 0.001393799961078912
+    },
+    {
+      "dashboard": "contratos",
+      "panel": "Clasificaci\u00f3n y calidad monetaria",
+      "seconds": 0.000991899985820055
+    },
+    {
+      "dashboard": "contratos",
+      "panel": "Se\u00f1ales y no evaluables por dimensi\u00f3n",
+      "seconds": 0.0018340999959036708
+    },
+    {
+      "dashboard": "contratos",
+      "panel": "Cobertura y porcentaje de se\u00f1al entre evaluados",
+      "seconds": 0.0020342000061646104
+    },
+    {
+      "dashboard": "contratos",
+      "panel": "Entidades \u2014 universo completo",
+      "seconds": 0.001694000035058707
+    },
+    {
+      "dashboard": "contratos",
+      "panel": "Contratos \u2014 p\u00e1gina SQL de 200 filas",
+      "seconds": 0.0019556000479497015
+    },
+    {
+      "dashboard": "contratos",
+      "panel": "Actividad mensual \u2014 firma",
+      "seconds": 0.001733299985062331
+    },
+    {
+      "dashboard": "contratos",
+      "panel": "Tipos de contrato \u2014 todos",
+      "seconds": 0.0009791000047698617
+    },
+    {
+      "dashboard": "contratos",
+      "panel": "Navegaci\u00f3n SQL \u2014 cambia P\u00e1gina; al filtrar vuelve a 1",
+      "seconds": 0.0011959999683313072
+    },
+    {
+      "dashboard": "procesos",
+      "panel": "Trazabilidad del corte contractual",
+      "seconds": 0.0010322000016458333
+    },
+    {
+      "dashboard": "procesos",
+      "panel": "Cobertura y duplicaci\u00f3n de procesos \u2014 universo completo",
+      "seconds": 0.0014902999973855913
+    },
+    {
+      "dashboard": "procesos",
+      "panel": "Registros por estado",
+      "seconds": 0.000881900021340698
+    },
+    {
+      "dashboard": "procesos",
+      "panel": "Procesos \u2014 p\u00e1gina SQL de 200 filas",
+      "seconds": 0.0009239999926649034
+    },
+    {
+      "dashboard": "procesos",
+      "panel": "Actividad mensual \u2014 publicaci\u00f3n",
+      "seconds": 0.0009901000303216279
+    },
+    {
+      "dashboard": "procesos",
+      "panel": "Tipos de contrato \u2014 todos",
+      "seconds": 0.0010576000204309821
+    },
+    {
+      "dashboard": "procesos",
+      "panel": "Navegaci\u00f3n SQL \u2014 cambia P\u00e1gina; al filtrar vuelve a 1",
+      "seconds": 0.0010097000049427152
+    }
+  ],
+  "plan": [
+    {
+      "Plan": {
+        "Node Type": "Limit",
+        "Parallel Aware": false,
+        "Async Capable": false,
+        "Startup Cost": 8.25,
+        "Total Cost": 10.38,
+        "Plan Rows": 1,
+        "Plan Width": 382,
+        "Actual Startup Time": 0.031,
+        "Actual Total Time": 0.032,
+        "Actual Rows": 1,
+        "Actual Loops": 1,
+        "Shared Hit Blocks": 5,
+        "Shared Read Blocks": 0,
+        "Shared Dirtied Blocks": 0,
+        "Shared Written Blocks": 0,
+        "Local Hit Blocks": 0,
+        "Local Read Blocks": 0,
+        "Local Dirtied Blocks": 0,
+        "Local Written Blocks": 0,
+        "Temp Read Blocks": 0,
+        "Temp Written Blocks": 0,
+        "Plans": [
+          {
+            "Node Type": "Index Scan",
+            "Parent Relationship": "InitPlan",
+            "Subplan Name": "InitPlan 1 (returns $0)",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Scan Direction": "Forward",
+            "Index Name": "publication_products_pkey",
+            "Relation Name": "publication_products",
+            "Alias": "publication_products",
+            "Startup Cost": 0.15,
+            "Total Cost": 16.35,
+            "Plan Rows": 2,
+            "Plan Width": 0,
+            "Actual Startup Time": 0.013,
+            "Actual Total Time": 0.013,
+            "Actual Rows": 0,
+            "Actual Loops": 1,
+            "Index Cond": "(product = ANY ('{gold,alerts}'::text[]))",
+            "Rows Removed by Index Recheck": 0,
+            "Filter": "(dirty OR (oid IS DISTINCT FROM ((to_regclass(relation))::oid)::bigint))",
+            "Rows Removed by Filter": 2,
+            "Shared Hit Blocks": 3,
+            "Shared Read Blocks": 0,
+            "Shared Dirtied Blocks": 0,
+            "Shared Written Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Dirtied Blocks": 0,
+            "Local Written Blocks": 0,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0
+          },
+          {
+            "Node Type": "Result",
+            "Parent Relationship": "Outer",
+            "Parallel Aware": false,
+            "Async Capable": false,
+            "Startup Cost": 0.0,
+            "Total Cost": 2.13,
+            "Plan Rows": 1,
+            "Plan Width": 382,
+            "Actual Startup Time": 0.03,
+            "Actual Total Time": 0.031,
+            "Actual Rows": 1,
+            "Actual Loops": 1,
+            "One-Time Filter": "(NOT $0)",
+            "Shared Hit Blocks": 5,
+            "Shared Read Blocks": 0,
+            "Shared Dirtied Blocks": 0,
+            "Shared Written Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Dirtied Blocks": 0,
+            "Local Written Blocks": 0,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0,
+            "Plans": [
+              {
+                "Node Type": "Nested Loop",
+                "Parent Relationship": "Outer",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Join Type": "Left",
+                "Startup Cost": 0.0,
+                "Total Cost": 2.12,
+                "Plan Rows": 1,
+                "Plan Width": 360,
+                "Actual Startup Time": 0.005,
+                "Actual Total Time": 0.006,
+                "Actual Rows": 1,
+                "Actual Loops": 1,
+                "Inner Unique": true,
+                "Shared Hit Blocks": 2,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0,
+                "Plans": [
+                  {
+                    "Node Type": "Seq Scan",
+                    "Parent Relationship": "Outer",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Relation Name": "src_gold_2d9e84c742454198",
+                    "Alias": "g",
+                    "Startup Cost": 0.0,
+                    "Total Cost": 1.06,
+                    "Plan Rows": 1,
+                    "Plan Width": 96,
+                    "Actual Startup Time": 0.002,
+                    "Actual Total Time": 0.003,
+                    "Actual Rows": 1,
+                    "Actual Loops": 1,
+                    "Filter": "(id_contrato = 'C1'::text)",
+                    "Rows Removed by Filter": 4,
+                    "Shared Hit Blocks": 1,
+                    "Shared Read Blocks": 0,
+                    "Shared Dirtied Blocks": 0,
+                    "Shared Written Blocks": 0,
+                    "Local Hit Blocks": 0,
+                    "Local Read Blocks": 0,
+                    "Local Dirtied Blocks": 0,
+                    "Local Written Blocks": 0,
+                    "Temp Read Blocks": 0,
+                    "Temp Written Blocks": 0
+                  },
+                  {
+                    "Node Type": "Seq Scan",
+                    "Parent Relationship": "Inner",
+                    "Parallel Aware": false,
+                    "Async Capable": false,
+                    "Relation Name": "src_alerts_1068334fbdba4c18",
+                    "Alias": "a",
+                    "Startup Cost": 0.0,
+                    "Total Cost": 1.05,
+                    "Plan Rows": 1,
+                    "Plan Width": 267,
+                    "Actual Startup Time": 0.001,
+                    "Actual Total Time": 0.001,
+                    "Actual Rows": 1,
+                    "Actual Loops": 1,
+                    "Filter": "(id_contrato = 'C1'::text)",
+                    "Rows Removed by Filter": 1,
+                    "Shared Hit Blocks": 1,
+                    "Shared Read Blocks": 0,
+                    "Shared Dirtied Blocks": 0,
+                    "Shared Written Blocks": 0,
+                    "Local Hit Blocks": 0,
+                    "Local Read Blocks": 0,
+                    "Local Dirtied Blocks": 0,
+                    "Local Written Blocks": 0,
+                    "Temp Read Blocks": 0,
+                    "Temp Written Blocks": 0
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "Planning": {
+        "Shared Hit Blocks": 30,
+        "Shared Read Blocks": 0,
+        "Shared Dirtied Blocks": 0,
+        "Shared Written Blocks": 0,
+        "Local Hit Blocks": 0,
+        "Local Read Blocks": 0,
+        "Local Dirtied Blocks": 0,
+        "Local Written Blocks": 0,
+        "Temp Read Blocks": 0,
+        "Temp Written Blocks": 0
+      },
+      "Planning Time": 0.244,
+      "Triggers": [],
+      "Execution Time": 0.051
+    }
+  ]
+}

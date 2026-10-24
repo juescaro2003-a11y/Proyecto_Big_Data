@@ -1,0 +1,22 @@
+{
+  "database_mode": "existing",
+  "model_versions": [
+    "alertas-cd-2.0",
+    "alertas-cd-3.0"
+  ],
+  "process_mode": "gold_snapshot",
+  "contract_source": "data/gold/contratos_control/contratos.parquet",
+  "process_source": "data/gold/procesos_modelo",
+  "process_cutoff": null,
+  "reader_role": "grafana_lectura",
+  "existing_tables": {
+    "gold": "gold.contratos_control",
+    "alerts": "analytics.alertas_contratacion_directa"
+  },
+  "memory": "1GB",
+  "connect_timeout": 5,
+  "lock_timeout_ms": 10000,
+  "statement_timeout_ms": 1800000,
+  "docker_timeout": 180,
+  "publication_timeout": 7200
+}

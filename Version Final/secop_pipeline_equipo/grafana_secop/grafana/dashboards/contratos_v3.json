@@ -1,0 +1,2375 @@
+{
+  "uid": "secop-contratos-v3",
+  "title": "SECOP II · Indicador v3 — contratos",
+  "schemaVersion": 41,
+  "version": 1,
+  "tags": [
+    "SECOP II",
+    "Contratación directa"
+  ],
+  "editable": false,
+  "timezone": "America/Bogota",
+  "refresh": "",
+  "time": {
+    "from": "2017-01-01T00:00:00Z",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "anio",
+        "label": "Año",
+        "type": "query",
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "secop-postgres"
+        },
+        "query": "SELECT 'Todos' AS __text,'Todos' AS __value UNION ALL SELECT DISTINCT anio::text,anio::text FROM secop_v3.dash_contratos_mensual UNION SELECT 'Sin fecha','0'",
+        "refresh": 1,
+        "multi": false,
+        "includeAll": false,
+        "current": {
+          "text": "Todos",
+          "value": "Todos"
+        }
+      },
+      {
+        "name": "pagina",
+        "label": "Página SQL (desde 1)",
+        "type": "textbox",
+        "query": "1",
+        "current": {
+          "text": "1",
+          "value": "1"
+        }
+      },
+      {
+        "name": "buscar",
+        "label": "Buscar ID exacto (solo detalle)",
+        "type": "textbox",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        }
+      },
+      {
+        "name": "clasificacion",
+        "label": "Clasificación (solo detalle)",
+        "type": "custom",
+        "query": "ALERTA,NO_ALERTA,NO_EVALUABLE,SIN_RESULTADO_ALERTAS",
+        "multi": true,
+        "includeAll": false,
+        "current": {
+          "text": [
+            "ALERTA",
+            "NO_ALERTA",
+            "NO_EVALUABLE",
+            "SIN_RESULTADO_ALERTAS"
+          ],
+          "value": [
+            "ALERTA",
+            "NO_ALERTA",
+            "NO_EVALUABLE",
+            "SIN_RESULTADO_ALERTAS"
+          ]
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Cómo interpretar este tablero",
+      "type": "text",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**Indicador descriptivo v3 — siete señales, tres familias.** Puntaje 0–1: promedio de las familias C, V y P con igual peso. No es una probabilidad de corrupción. Se exige que las siete señales sean evaluables; si falta alguna, el puntaje final y la alerta son NULL y la clasificación es NO_EVALUABLE.\n\n**ALERTA significa priorizado dentro del cupo trimestral**, con puntaje positivo; no significa dos de tres ni incumplimiento probado. Los empates se resuelven por ID para respetar el cupo, no porque un ID represente más riesgo. Las medidas de red no entran al puntaje. C2 usa el año observado hasta el corte: este análisis es retrospectivo.\n\nAño controla los gráficos. Clasificación e ID filtran únicamente el detalle. Página permite recorrer todos los registros. El selector temporal superior no se usa. Consulte versión, corte y cupo en Trazabilidad."
+      }
+    },
+    {
+      "id": 2,
+      "title": "Trazabilidad del corte contractual",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 24,
+        "h": 4
+      },
+      "description": "Fecha de cálculo y publicación son distintas. En procesos, la fuente es Gold al momento de cargar.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT * FROM secop_v3.dash_metadatos",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Contratos en ALERTA — revisar",
+      "type": "stat",
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 24,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT coalesce(sum(n),0) AS alertas FROM secop_v3.dash_contratos_resumen WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) AND clasificacion='ALERTA'",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Clasificación — universo completo",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 24,
+        "h": 6
+      },
+      "description": "Los contratos con importe inválido permanecen, pero V1 no es evaluable.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT clasificacion,sum(n) contratos FROM secop_v3.dash_contratos_resumen WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY 1",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Señales y no evaluables por dimensión",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 18,
+        "w": 24,
+        "h": 8
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT dimension,sum(alertas) señales,sum(sin_senal) sin_señal,sum(no_evaluables) no_evaluables FROM secop_v3.dash_dimensiones WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY 1 ORDER BY 1",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Cobertura y porcentaje de señal entre evaluados",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 26,
+        "w": 24,
+        "h": 6
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT dimension,sum(total) contratos,sum(evaluados) evaluados,round(100.0*sum(evaluados)/nullif(sum(total),0),2) cobertura_pct,round(100.0*sum(alertas)/nullif(sum(evaluados),0),2) señal_entre_evaluados_pct FROM secop_v3.dash_dimensiones WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY 1 ORDER BY 1",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Entidades — universo completo",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 24,
+        "h": 10
+      },
+      "description": "El número absoluto favorece entidades grandes. Compare también el porcentaje y la cobertura; no es un ranking de corrupción.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT entidad,sum(n) contratos,sum(alertas) alertas,sum(no_evaluables) no_evaluables,sum(sin_resultado) sin_resultado,round(100.0*sum(alertas)/nullif(sum(n),0),2) alertas_sobre_total_pct FROM secop_v3.dash_entidades WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY entidad ORDER BY alertas DESC,contratos DESC",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Contratos — página SQL de 200 filas",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 42,
+        "w": 24,
+        "h": 12
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT * FROM secop_v3.dash_contratos WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) AND clasificacion IN (${clasificacion:sqlstring}) AND (${buscar:sqlstring}='' OR id_contrato=${buscar:sqlstring}) ORDER BY id_contrato LIMIT 200 OFFSET (((CASE WHEN ${pagina:sqlstring} ~ '^[1-9][0-9]{0,8}$' THEN (${pagina:sqlstring})::bigint ELSE 1 END)-1)*200)",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Definición de las dimensiones",
+      "type": "text",
+      "gridPos": {
+        "x": 0,
+        "y": 54,
+        "w": 24,
+        "h": 7
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**C1:** proporción de contratos del proveedor en la entidad, 365 días. **C2:** HHI anual por número de contratos. **C3:** proporción de contratos del proveedor que provienen de esa entidad, 365 días.\n\n**V1:** valores previamente validados, logaritmo y mediana/MAD de dos años completos anteriores del mismo tipo, causal y categoría UNSPSC de 4 dígitos; percentil 95 si MAD es cero. **V2:** repetición entidad–proveedor–tipo–categoría en ventana corta; no confirma fraccionamiento.\n\n**P1:** primera aparición observada del proveedor, con cobertura histórica suficiente; no significa empresa recién creada. **P2:** diversidad de segmentos UNSPSC del proveedor; no demuestra incompatibilidad de actividades.\n\nLos umbrales son parámetros operativos iniciales pendientes de validación externa. El detalle muestra métricas y motivos. Los intervalos puntaje_min/puntaje_max conservan la incertidumbre de las señales ausentes."
+      }
+    },
+    {
+      "id": 10,
+      "title": "Actividad mensual — firma",
+      "type": "timeseries",
+      "gridPos": {
+        "x": 0,
+        "y": 61,
+        "w": 24,
+        "h": 8
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {},
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT mes AS time,sum(n)::double precision AS registros FROM secop_v3.dash_contratos_mensual WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY mes ORDER BY mes",
+          "format": "time_series",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Tipos de contrato — todos",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 69,
+        "w": 24,
+        "h": 8
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT tipo,sum(n) registros FROM secop_v3.dash_contratos_tipos WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY tipo ORDER BY registros DESC",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Navegación SQL — cambia Página; al filtrar vuelve a 1",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 77,
+        "w": 24,
+        "h": 4
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "noValue": "Sin dato"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "c3"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "v2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p2"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "SIN SEÑAL",
+                        "color": "green"
+                      },
+                      "1": {
+                        "text": "SEÑAL",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "NO EVALUABLE",
+                        "color": "orange"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": false
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT (CASE WHEN ${pagina:sqlstring} ~ '^[1-9][0-9]{0,8}$' THEN (${pagina:sqlstring})::bigint ELSE 1 END) pagina,200 filas_por_pagina,total_filtrado,ceil(total_filtrado/200.0) paginas FROM (SELECT CASE WHEN ${buscar:sqlstring}='' THEN (SELECT coalesce(sum(n),0) FROM secop_v3.dash_contratos_resumen WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) AND clasificacion IN (${clasificacion:sqlstring})) ELSE (SELECT count(*) FROM secop_v3.dash_contratos WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) AND clasificacion IN (${clasificacion:sqlstring}) AND id_contrato=${buscar:sqlstring}) END total_filtrado) t",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Distribución del puntaje evaluable",
+      "type": "barchart",
+      "gridPos": {
+        "x": 0,
+        "y": 81,
+        "w": 24,
+        "h": 8
+      },
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "secop-postgres"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "secop-postgres"
+          },
+          "rawSql": "SELECT (intervalo/10.0)::text || ' a ' || ((intervalo+1)/10.0)::text intervalo,sum(n) contratos FROM secop_v3.dash_puntajes WHERE (${anio:sqlstring} = 'Todos' OR anio::text = ${anio:sqlstring}) GROUP BY intervalo ORDER BY intervalo",
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "orientation": "vertical"
+      }
+    }
+  ],
+  "links": [
+    {
+      "title": "Indicador v3",
+      "url": "/d/secop-contratos-v3",
+      "type": "link"
+    },
+    {
+      "title": "Procesos Gold",
+      "url": "/d/secop-procesos-v3",
+      "type": "link"
+    }
+  ]
+}

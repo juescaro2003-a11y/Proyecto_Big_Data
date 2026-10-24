@@ -1,0 +1,9 @@
+apiVersion: 1
+providers:
+  - name: SECOP
+    orgId: 1
+    folder: SECOP II
+    type: file
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/dashboards

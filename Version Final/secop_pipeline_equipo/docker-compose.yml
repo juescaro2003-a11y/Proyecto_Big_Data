@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: secop_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-secop}
+      POSTGRES_USER: ${POSTGRES_USER:-secop_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Configure POSTGRES_PASSWORD en .env}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - secop_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-secop_user} -d ${POSTGRES_DB:-secop}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  secop_pgdata:

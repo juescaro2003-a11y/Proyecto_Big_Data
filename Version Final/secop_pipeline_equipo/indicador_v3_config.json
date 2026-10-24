@@ -1,0 +1,23 @@
+{
+  "version": "alertas-cd-3.0",
+  "cutoff": null,
+  "coverage_start": null,
+  "memory_mb": 2048,
+  "threads": 1,
+  "history_days": 365,
+  "min_entity_contracts": 10,
+  "min_supplier_contracts": 5,
+  "c1_threshold": 0.4,
+  "c2_threshold": 0.25,
+  "c3_threshold": 0.8,
+  "absolute_value_cap": 10000000000000,
+  "median_value_factor": 1000,
+  "v1_reference_years": 2,
+  "v1_min_reference": 30,
+  "v1_z_threshold": 3.5,
+  "v2_days": 30,
+  "v2_min_contracts": 3,
+  "p2_min_segments": 3,
+  "review_top_k_per_quarter": 2000,
+  "minimum_priority_score": 0.0
+}

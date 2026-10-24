@@ -1,0 +1,7 @@
+{
+  "workers": 2,
+  "memory_mb_per_worker": 2048,
+  "block_days": 31,
+  "buckets": 32,
+  "large_group_rows": 100000
+}
